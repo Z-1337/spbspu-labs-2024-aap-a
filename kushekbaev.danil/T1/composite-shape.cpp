@@ -113,7 +113,7 @@ namespace kushekbaev
     array_[shapeCounter_++] = shp;
   }
 
-  void CompositeShape::pop_back()
+  void CompositeShape::pop_back() noexcept
   {
     delete array_[shapeCounter_--];
   }

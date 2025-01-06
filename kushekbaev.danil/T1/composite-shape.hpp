@@ -10,8 +10,8 @@ namespace kushekbaev
   class CompositeShape
   {
   public:
-    CompositeShape & CompositeShape::operator=(const CompositeShape & rhs);
-    CompositeShape::CompositeShape(CompositeShape && rhs);
+    CompositeShape & operator=(const CompositeShape & rhs);
+    CompositeShape(CompositeShape && rhs);
     ~CompositeShape();
 
     double getArea() const;
