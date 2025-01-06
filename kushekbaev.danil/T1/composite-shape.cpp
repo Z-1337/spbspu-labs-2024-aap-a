@@ -119,14 +119,7 @@ namespace kushekbaev
 
   void CompositeShape::pop_back() noexcept
   {
-    if (shapeCounter_ == 0)
-    {
-      throw std::out_of_range("No shapes in CompositeShape\n");
-    }
-    else
-    {
-      delete array_[shapeCounter_--];
-    }
+    delete array_[shapeCounter_--];
   }
 
   Shape* CompositeShape::at(size_t id) const
