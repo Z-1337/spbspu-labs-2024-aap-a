@@ -2,6 +2,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <cctype>
+#include <array>
 #include "base-types.hpp"
 #include "shapeBreeding.hpp"
 
@@ -9,12 +10,14 @@ namespace kushekbaev
 {
   Concave::Concave(point_t first,
     point_t second,
-    point_t third,
-    point_t final):
-    first_(first),
-    second_(second),
-    third_(third),
-    final_(final)
+  point_t third,
+  point_t final):
+  first_(first),
+  second_(second),
+  third_(third),
+  final_(final),
+  parallelogram1_(first_, second_, third_),
+  parallelogram2_(second_, third_, final_)
   {
     if (!isTriangle(first, second, third) || !isPointInsideTriangle(first, second, third, final))
     {
@@ -51,28 +54,27 @@ namespace kushekbaev
   void Concave::move(point_t Z)
   {
     point_t middle = getFrameRect().pos;
-    double moveX = Z.x - middle.x;
-    double moveY = Z.y - middle.y;
-    first_.x += moveX;
-    first_.y += moveY;
-    second_.x += moveX;
-    second_.y += moveY;
-    third_.x += moveX;
-    third_.y += moveY;
-    final_.x += moveX;
-    final_.y += moveY;
+    double dx = Z.x - middle.x;
+    double dy = Z.y - middle.y;
+
+    std::array<point_t*, 4> points = { &first_, &second_, &third_, &final_ };
+
+    for (point_t* point : points)
+    {
+      point->x += dx;
+      point->y += dy;
+    }
   }
 
   void Concave::move(double dx, double dy)
   {
-    first_.x += dx;
-    first_.y += dy;
-    second_.x += dx;
-    second_.y += dy;
-    third_.x += dx;
-    third_.y += dy;
-    final_.x += dx;
-    final_.y += dy;
+    std::array<point_t*, 4> points = { &first_, &second_, &third_, &final_ };
+
+    for (point_t* point : points)
+    {
+      point->x += dx;
+      point->y += dy;
+    }
   }
 
   void Concave::scale(double V)
@@ -82,13 +84,12 @@ namespace kushekbaev
       throw std::out_of_range("Scale coefficient should be greater than zero\n");
     }
     point_t middle = getFrameRect().pos;
-    first_.x = middle.x + (first_.x - middle.x) * V;
-    first_.y = middle.y + (first_.y - middle.y) * V;
-    second_.x = middle.x + (second_.x - middle.x) * V;
-    second_.y = middle.y + (second_.y - middle.y) * V;
-    third_.x = middle.x + (third_.x - middle.x) * V;
-    third_.y = middle.y + (third_.y - middle.y) * V;
-    final_.x = middle.x + (final_.x - middle.x) * V;
-    final_.y = middle.y + (final_.y - middle.y) * V;
+    std::array<point_t*, 4> points = { &first_, &second_, &third_, &final_ };
+
+    for (point_t* point : points)
+    {
+      point->x = middle.x + (point->x - middle.x) * V;
+      point->y = middle.y + (point->y - middle.y) * V;
+    }
   }
 }

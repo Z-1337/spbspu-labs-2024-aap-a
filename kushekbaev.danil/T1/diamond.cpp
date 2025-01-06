@@ -1,22 +1,23 @@
 #include "diamond.hpp"
 #include <cmath>
 #include <stdexcept>
-#include "shape.hpp"
-#include "shapeBreeding.hpp"
+#include <array>
 
 namespace kushekbaev
 {
   Diamond::Diamond(point_t middle,
     point_t diffX,
-    point_t diffY):
-    middle_(middle),
-    diffX_(diffX),
-    diffY_(diffY)
+  point_t diffY):
+  Parallelogram(
+    {middle.x - diffX.x, middle.y},
+    {middle.x + diffX.x, middle.y},
+    {middle.x, middle.y - diffY.y}
+  ),
+  middle_(middle),
+  diffX_(diffX),
+  diffY_(diffY)
   {
-    if (!isTriangle(middle, diffX, diffY))
-    {
-      throw std::invalid_argument("Incorrect diamond\n");
-    }
+
   }
 
   double Diamond::getArea() const
@@ -34,15 +35,25 @@ namespace kushekbaev
     point_t middle = getFrameRect().pos;
     double dx = Z.x - middle.x;
     double dy = Z.y - middle.y;
-    moveDelta(dx, dy, diffX_);
-    moveDelta(dx, dy, diffY_);
+
+    std::array<point_t*, 3> points = { &middle_, &diffX_, &diffY_, };
+
+    for (point_t* point : points)
+    {
+      point->x += dx;
+      point->y += dy;
+    }
   }
 
   void Diamond::move(double dx, double dy)
   {
-    moveDelta(dx, dy, middle_);
-    moveDelta(dx, dy, diffX_);
-    moveDelta(dx, dy, diffY_);
+    std::array<point_t*, 3> points = { &middle_, &diffX_, &diffY_, };
+
+    for (point_t* point : points)
+    {
+      point->x += dx;
+      point->y += dy;
+    }
   }
 
   void Diamond::scale(double V)
