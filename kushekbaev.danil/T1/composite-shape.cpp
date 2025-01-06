@@ -99,6 +99,10 @@ namespace kushekbaev
 
   void CompositeShape::push_back(Shape* shp)
   {
+    if (shp == nullptr)
+    {
+      throw std::invalid_argument("No shapes in array\n");
+    }
     if (shapeCounter_ + 1 == capacity_)
     {
       Shape ** new_array = creatingNewArray(array_, capacity_, 2 * capacity_);
@@ -115,7 +119,14 @@ namespace kushekbaev
 
   void CompositeShape::pop_back() noexcept
   {
-    delete array_[shapeCounter_--];
+    if (shapeCounter_ == 0)
+    {
+      throw std::out_of_range("No shapes in CompositeShape\n");
+    }
+    else
+    {
+      delete array_[shapeCounter_--];
+    }
   }
 
   Shape* CompositeShape::at(size_t id) const
